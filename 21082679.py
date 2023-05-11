@@ -22,7 +22,7 @@ import cluster_tools as ct
 
 # Setting the specific columns 
 
-columnsName = ["DATE", "value"]
+columns_name = ["DATE", "value"]
 
 # Set the option to display all columns
 
@@ -31,10 +31,10 @@ pd.set_option('display.max_columns', None)
 
 # Read in the "Electric_Production.csv" file as a pandas dataframe and setting the specific columns
 
-df = pd.read_csv("Electric_Production.csv",names = columnsName, header = 0, parse_dates = [0])
+df = pd.read_csv("Electric_Production.csv", names=columns_name, header=0, parse_dates=[0])
 
 
-#storing in the array
+# storing in the array
 
 array = df.to_numpy()
 
@@ -42,7 +42,7 @@ array = df.to_numpy()
 
 transposed_data = array.T
 
-#print Transpose
+# print Transpose
 
 print(transposed_data)
 
@@ -66,19 +66,19 @@ df = df.fillna(0)
 
 df.info()
 
-# Again verifing the dataset to check the dataset
+# Again verifying the dataset to check the dataset
 
 df.head()
 
 # Setting the date format to Year-Month-Day
 
-df['DATE'] = pd.to_datetime(df['DATE'],infer_datetime_format=True)
+df['DATE'] = pd.to_datetime(df['DATE'], infer_datetime_format=True)
 
 # Setting the date as an index
 
 df = df.set_index(['DATE'])
 
-# Verifing the dataset
+# Verifying the dataset
 
 df.head()
 
@@ -87,11 +87,9 @@ df.head()
 rolling_mean = df.rolling(window=12).mean()
 rolling_std = df.rolling(window=12).std()
 
-# Ploting the rolling the rolling mean and std 
-
 # Setting the figuresize
 
-plt.figure(figsize = (12,8), dpi=300)
+plt.figure(figsize=(12, 8), dpi=300)
 
 # displaying the plot
 
@@ -101,16 +99,16 @@ plt.plot(rolling_std, label='Rolling Std')
 
 # Setting the x label and y label
 
-plt.xlabel('Date', size = 12)
-plt.ylabel('Electric Production', size  = 12)
+plt.xlabel('Date', size=12)
+plt.ylabel('Electric Production', size=12)
 
 # Setting the legend at the upper left position
 
-plt.legend(loc = 'upper left')
+plt.legend(loc='upper left')
 
 # setting the super title and title
 
-plt.suptitle('Rolling Statistics', size = 14)
+plt.suptitle('Rolling Statistics', size=14)
 plt.title("21082679")
 
 # Saving the plot
@@ -123,7 +121,7 @@ plt.show()
 
 # Setting the figuresize
 
-plt.figure(figsize=(12,8))
+plt.figure(figsize=(12, 8))
 
 # displaying the plot
 
@@ -145,12 +143,12 @@ plt.show()
 
 # Use the augmented Dickey-Fuller test to check for stationarity
 
-adful = adfuller(df,autolag="AIC")
+ad_ful = adfuller(df, autolag="AIC")
 
 # Create a DataFrame with ADF test results
 
 output_df = pd.DataFrame({
-    "Values": [adful[0], adful[1], adful[2], adful[3], adful[4]['1%'], adful[4]['5%'], adful[4]['10%']],
+    "Values": [ad_ful[0], ad_ful[1], ad_ful[2], ad_ful[3], ad_ful[4]['1%'], ad_ful[4]['5%'], ad_ful[4]['10%']],
     "Metric": ["Test Statistics", "p-value", "No. of lags used", "Number of observations used",               
                "critical value (1%)", "critical value (5%)", "critical value (10%)"]
 })
@@ -159,16 +157,16 @@ output_df = pd.DataFrame({
 
 print(output_df)
 
-# Calculate autocorrelation at lag 1
+# Calculate auto correlation at lag 1
 
-autocor_lag1 = df['value'].autocorr(lag=1)
+auto_cor_lag1 = df['value'].autocorr(lag=1)
 
 # Print the result
 
-print("One Month Lag: ", autocor_lag1)
+print("One Month Lag: ", auto_cor_lag1)
 
 
-# Calculate autocorrelation for lags of 3, 6, and 9 months
+# Calculate auto correlation for lags of 3, 6, and 9 months
 
 autocorr_lag3 = df['value'].autocorr(lag=3)
 autocorr_lag6 = df['value'].autocorr(lag=6)
@@ -189,11 +187,9 @@ decompose.plot()
 
 # Saving and showing the figure
 
-plt.savefig("21082679-Saud.png",dpi=300)
+plt.savefig("21082679-Saud.png", dpi=300)
 
 plt.show()
-
-
 
 # Read the dataset from a CSV file
 data = pd.read_csv("agridataset.csv")
@@ -220,7 +216,7 @@ corr = sec_data.corr()
 print(corr)
 
 ct.map_corr(sec_data)
-#Saving the plot and showing plot
+# Saving the plot and showing plot
 
 plt.savefig("heatmap.png")
 
@@ -236,8 +232,6 @@ plt.savefig("Matrix.png", dpi=300)
 
 # Display the scatter matrix plot
 plt.show()
-
-
 
 # Selecting '1970' and '2020' columns from 'sec_data' DataFrame
 df_ex = sec_data[['1970', '2020']]
@@ -257,20 +251,15 @@ df_ex = df_ex.drop('index', axis=1)
 # Printing first 15 rows of the DataFrame
 print(df_ex.iloc[0:15])
 
-
-
 # Scale the dataframe
 df_norm, df_min, df_max = ct.scaler(df_ex)
-
-
-print()
 
 print('n  value')
 
 for ncluster in range(2, 10):
-    # setup the  cluster with the number of expected clusters
+    # set up the  cluster with the number of expected clusters
     kmeans = cluster.KMeans(n_clusters=ncluster)
-    #fitting the dataset 
+    # fitting the dataset
     kmeans.fit(df_norm)
     labels = kmeans.labels_
     
@@ -298,19 +287,18 @@ plt.figure(figsize=(8.0, 8.0))
 cm = plt.cm.get_cmap('tab10')
 plt.scatter(df_norm['1970'], df_norm['2020'], 10, labels, marker='o', cmap=cm)
 plt.scatter(xcen, ycen, 45, 'k', marker='d')
-plt.suptitle("Three Clusters", size = 20)
-plt.title("21082679",size = 18)
-plt.xlabel("Agriculture(1970)", size = 16)
-plt.ylabel("Agriculture(2020)", size = 16)
+plt.suptitle("Three Clusters", size=20)
+plt.title("21082679", size=18)
+plt.xlabel("Agriculture(1970)", size=16)
+plt.ylabel("Agriculture(2020)", size=16)
 plt.savefig("Three Clusters.png", dpi=300)
 plt.show()
 
-
-
 print(cen)
+
 # Applying the backscale function to convert the cluster centre
 scen = ct.backscale(cen, df_min, df_max)
-print()
+
 print(scen)
 xcen = scen[:, 0]
 ycen = scen[:, 1]
@@ -319,9 +307,9 @@ plt.figure(figsize=(8.0, 8.0))
 cm = plt.cm.get_cmap('tab10')
 plt.scatter(df_ex["1970"], df_ex["2020"], 10, labels, marker="o", cmap=cm)
 plt.scatter(xcen, ycen, 45, "k", marker="d")
-plt.suptitle("Three Centered Clusters", size = 20)
-plt.title("21082679",size = 18)
-plt.xlabel("Agriculture(1970)", size = 16)
-plt.ylabel("Agriculture(2020)", size = 16)
+plt.suptitle("Three Centered Clusters", size=20)
+plt.title("21082679", size=18)
+plt.xlabel("Agriculture(1970)", size=16)
+plt.ylabel("Agriculture(2020)", size=16)
 plt.savefig("Three Centered Clusters.png", dpi=300)
 plt.show()

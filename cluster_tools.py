@@ -11,7 +11,7 @@ def map_corr(df, size=6):
         size: vertical and horizontal size of the plot (in inch)
         
     The function does not have a plt.show() at the end so that the user 
-    can savethe figure.
+    can save the figure.
     """
 
     import matplotlib.pyplot as plt  # ensure pyplot imported
@@ -19,7 +19,7 @@ def map_corr(df, size=6):
     corr = df.corr()
     plt.figure(figsize=(size, size))
     # fig, ax = plt.subplots()
-    plt.matshow(corr, cmap='coolwarm')
+    plt.matshow(corr, cmap='cool warm')
     # setting ticks to column names
     plt.xticks(range(len(corr.columns)), corr.columns, rotation=90)
     plt.yticks(range(len(corr.columns)), corr.columns)
