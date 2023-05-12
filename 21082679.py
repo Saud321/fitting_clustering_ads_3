@@ -11,7 +11,7 @@ from statsmodels.tsa.stattools import adfuller
 A standard statistical test for a time series' stationarity, the Augmented Dickey-Fuller unit 
 root test, is carried out using this function."""
 
-# seasonal_decompose() is used for time series decomposition 
+# seasonal_decompose() is used for time series decomposition
 
 from statsmodels.tsa.seasonal import seasonal_decompose
 
@@ -19,20 +19,17 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 
 import cluster_tools as ct
 
+# Setting the specific columns
 
-# Setting the specific columns 
-
-columns_name = ["DATE", "value"]
+columnsName = ["DATE", "value"]
 
 # Set the option to display all columns
 
 pd.set_option('display.max_columns', None)
 
-
 # Read in the "Electric_Production.csv" file as a pandas dataframe and setting the specific columns
 
-df = pd.read_csv("Electric_Production.csv", names=columns_name, header=0, parse_dates=[0])
-
+df = pd.read_csv("Electric_Production.csv", names=columnsName, header=0, parse_dates=[0])
 
 # storing in the array
 
@@ -86,6 +83,8 @@ df.head()
 
 rolling_mean = df.rolling(window=12).mean()
 rolling_std = df.rolling(window=12).std()
+
+# Plotting the rolling mean and std
 
 # Setting the figuresize
 
@@ -143,13 +142,13 @@ plt.show()
 
 # Use the augmented Dickey-Fuller test to check for stationarity
 
-ad_ful = adfuller(df, autolag="AIC")
+adful = adfuller(df, autolag="AIC")
 
 # Create a DataFrame with ADF test results
 
 output_df = pd.DataFrame({
-    "Values": [ad_ful[0], ad_ful[1], ad_ful[2], ad_ful[3], ad_ful[4]['1%'], ad_ful[4]['5%'], ad_ful[4]['10%']],
-    "Metric": ["Test Statistics", "p-value", "No. of lags used", "Number of observations used",               
+    "Values": [adful[0], adful[1], adful[2], adful[3], adful[4]['1%'], adful[4]['5%'], adful[4]['10%']],
+    "Metric": ["Test Statistics", "p-value", "No. of lags used", "Number of observations used",
                "critical value (1%)", "critical value (5%)", "critical value (10%)"]
 })
 
@@ -157,16 +156,15 @@ output_df = pd.DataFrame({
 
 print(output_df)
 
-# Calculate auto correlation at lag 1
+# Calculate autocorrelation at lag 1
 
-auto_cor_lag1 = df['value'].autocorr(lag=1)
+autocor_lag1 = df['value'].autocorr(lag=1)
 
 # Print the result
 
-print("One Month Lag: ", auto_cor_lag1)
+print("One Month Lag: ", autocor_lag1)
 
-
-# Calculate auto correlation for lags of 3, 6, and 9 months
+# Calculate autocorrelation for lags of 3, 6, and 9 months
 
 autocorr_lag3 = df['value'].autocorr(lag=3)
 autocorr_lag6 = df['value'].autocorr(lag=6)
@@ -194,7 +192,6 @@ plt.show()
 # Read the dataset from a CSV file
 data = pd.read_csv("agridataset.csv")
 
-
 """On a Pandas DataFrame with the identifier "data," this code is invoking the "head()" function.
 The 'head()' function, where n is by default 5, retrieves the DataFrame's top n rows.
 The console is then output with the resulting DataFrame.
@@ -209,7 +206,6 @@ data = data.fillna(0)
 # Selecting columns from dataframe
 
 sec_data = data[['1970', '1980', '2010', '2020']]
-
 
 corr = sec_data.corr()
 
@@ -254,6 +250,8 @@ print(df_ex.iloc[0:15])
 # Scale the dataframe
 df_norm, df_min, df_max = ct.scaler(df_ex)
 
+print()
+
 print('n  value')
 
 for ncluster in range(2, 10):
@@ -262,11 +260,10 @@ for ncluster in range(2, 10):
     # fitting the dataset
     kmeans.fit(df_norm)
     labels = kmeans.labels_
-    
-    cen = kmeans.cluster_centers_
-    
-    print(ncluster, skmet.silhouette_score(df_ex, labels))
 
+    cen = kmeans.cluster_centers_
+
+    print(ncluster, skmet.silhouette_score(df_ex, labels))
 
 # Set number of clusters
 ncluster = 3
@@ -295,10 +292,9 @@ plt.savefig("Three Clusters.png", dpi=300)
 plt.show()
 
 print(cen)
-
 # Applying the backscale function to convert the cluster centre
 scen = ct.backscale(cen, df_min, df_max)
-
+print()
 print(scen)
 xcen = scen[:, 0]
 ycen = scen[:, 1]
