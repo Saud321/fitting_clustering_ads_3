@@ -1,7 +1,6 @@
 """ Tools to support clustering: correlation heatmap, normaliser and scale 
 (cluster centres) back to original scale, check for mismatching entries """
 
-
 def map_corr(df, size=6):
     """Function creates heatmap of correlation matrix for each pair of 
     columns in the dataframe.
@@ -26,8 +25,7 @@ def map_corr(df, size=6):
 
     plt.colorbar()
     # no plt.show() at the end
-    
-    
+
 def scaler(df):
     """ Expects a dataframe and normalises all 
         columnsto the 0-1 range. It also returns 
@@ -41,7 +39,6 @@ def scaler(df):
     df = (df-df_min) / (df_max - df_min)
 
     return df, df_min, df_max
-
 
 def backscale(arr, df_min, df_max):
     """ Expects an array of normalised cluster centres and scales
